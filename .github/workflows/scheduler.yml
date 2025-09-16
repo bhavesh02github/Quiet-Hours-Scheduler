@@ -2,15 +2,44 @@ name: Quiet Hours Cron Job
 
 on:
   schedule:
-    # Runs every 5 minutes
     - cron: '*/5 * * * *'
 
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Call the cron job endpoint
+      - name: Check for upcoming blocks and send reminders
+        uses: steebchen/mongodb-actions@v5
+        with:
+          mongodb_connection_string: ${{ secrets.MONGODB_URI }}
+          mongodb_database: 'quiet_hours_db'
+          mongodb_collection: 'timeBlocks'
+          mongodb_operation: 'find'
+          mongodb_query: |
+            {
+              "startTime": {
+                "$gte": { "$date": "${{ env.NOW_ISO }}" },
+                "$lte": { "$date": "${{ env.TEN_MIN_ISO }}" }
+              },
+              "reminderSent": false
+            }
+
+      - name: Send email for each block
+        if: steps.mongodb.outputs.result != '[]'
         run: |
-          curl --request GET \
-          --url '${{ secrets.DEPLOYMENT_URL }}' \
-          --header 'Authorization: Bearer ${{ secrets.CRON_SECRET }}'
+          for block in $(echo '${{ steps.mongodb.outputs.result }}' | jq -c '.[]'); do
+            EMAIL=$(echo "$block" | jq -r '.userEmail')
+            TITLE=$(echo "$block" | jq -r '.title')
+            ID=$(echo "$block" | jq -r '._id."$oid"')
+
+            # Trigger the email sending API
+            curl --request POST \
+              --url 'https://quiet-hours-scheduler.vercel.app/api/send-email' \
+              --header 'Authorization: Bearer ${{ secrets.CRON_SECRET }}' \
+              --header 'Content-Type: application/json' \
+              --data "{\"email\":\"$EMAIL\",\"title\":\"$TITLE\"}"
+
+            # Update the reminderSent flag in MongoDB
+            curl --request POST \
+              --url 'https://api.mongodb.com/...' # This part is complex, requires setting up MongoDB Data API
+          done

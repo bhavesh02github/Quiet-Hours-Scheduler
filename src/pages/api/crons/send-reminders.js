@@ -13,12 +13,13 @@ export default async function handler(req, res) {
 
   try {
     const now = new Date();
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60 * 1000);
+    // Check a 14-minute window to be safe. 5 mins (cron interval) + 10 mins (reminder) - 1 min (buffer)
+    const fifteenMinutesFromNow = new Date(now.getTime() + 14 * 60 * 1000);
 
     const blocksToSend = await db.collection('timeBlocks').find({
       startTime: {
         $gte: now,
-        $lte: tenMinutesFromNow,
+        $lte: fifteenMinutesFromNow,
       },
       reminderSent: false,
     }).toArray();
