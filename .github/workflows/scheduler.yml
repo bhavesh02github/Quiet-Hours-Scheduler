@@ -14,5 +14,5 @@ jobs:
           START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
           END_TIME=$(date -u -d "+14 minutes" +"%Y-%m-%dT%H:%M:%S.000Z")
           curl --request GET \
-            --url '${{ secrets.DEPLOYMENT_URL }}?startTime=${START_TIME}&endTime=${END_TIME}' \
+            --url '${{ secrets.DEPLOYMENT_URL }}?startTime="${START_TIME}"&endTime="${END_TIME}"' \
             --header 'Authorization: Bearer ${{ secrets.CRON_SECRET }}'
