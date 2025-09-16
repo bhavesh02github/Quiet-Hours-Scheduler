@@ -12,14 +12,19 @@ export default async function handler(req, res) {
   const db = client.db('quiet_hours_db');
 
   try {
-    const now = new Date();
-    // Check a 14-minute window to be safe. 5 mins (cron interval) + 10 mins (reminder) - 1 min (buffer)
-    const fifteenMinutesFromNow = new Date(now.getTime() + 14 * 60 * 1000);
+    // Use the times provided by the GitHub Action from the URL
+    const { startTime, endTime } = req.query;
+    if (!startTime || !endTime) {
+      return res.status(400).json({ message: 'Time window not provided.' });
+    }
+
+    const start = new Date(startTime);
+    const end = new Date(endTime);
 
     const blocksToSend = await db.collection('timeBlocks').find({
       startTime: {
-        $gte: now,
-        $lte: fifteenMinutesFromNow,
+        $gte: start,
+        $lte: end,
       },
       reminderSent: false,
     }).toArray();
