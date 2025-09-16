@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
 import { supabase } from '../lib/supabaseClient';
 import toast from 'react-hot-toast';
+import { formatInTimeZone } from 'date-fns-tz';
 
 export default function Dashboard() {
   const { user, signOut } = useAuth();
@@ -87,7 +88,7 @@ export default function Dashboard() {
         {blocks.length > 0 ? (
           blocks.map((block) => (
             <li key={block._id}>
-              <strong>{block.title}</strong> - {new Date(block.startTime).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true })}
+              <strong>{block.title}</strong> - {formatInTimeZone(new Date(block.startTime), 'Asia/Kolkata', "MMM d, yyyy 'at' h:mm a")}
             </li>
           ))
         ) : (
