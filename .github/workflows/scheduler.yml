@@ -1,16 +1,18 @@
 name: Quiet Hours Cron Job
 
 on:
+  workflow_dispatch:
   schedule:
-    # Runs every 5 minutes
     - cron: '*/5 * * * *'
 
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
-      - name: Call the cron job endpoint
+      - name: Call the cron job endpoint with time window
         run: |
+          START_TIME=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z")
+          END_TIME=$(date -u -d "+14 minutes" +"%Y-%m-%dT%H:%M:%S.000Z")
           curl --request GET \
-          --url '${{ secrets.DEPLOYMENT_URL }}' \
-          --header 'Authorization: Bearer ${{ secrets.CRON_SECRET }}'
+            --url '${{ secrets.DEPLOYMENT_URL }}?startTime=${START_TIME}&endTime=${END_TIME}' \
+            --header 'Authorization: Bearer ${{ secrets.CRON_SECRET }}'
