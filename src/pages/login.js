@@ -54,7 +54,7 @@ export default function LoginPage() {
                 <title>{isSignUp ? 'Sign Up' : 'Login'} - Quiet Hours</title>
             </Head>
             <div className="glass-card">
-                <h1 className="auth-title text-gradient">Quiet Hours</h1>
+                <h1 className="auth-title text-gradient">Quiet Hours Scheduler</h1>
                 <h2 className="auth-subtitle">{isSignUp ? 'Create Your Account' : 'Welcome Back!'}</h2>
                 
                 <form onSubmit={handleAuth}>

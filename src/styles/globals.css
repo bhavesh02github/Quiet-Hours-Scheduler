@@ -228,6 +228,7 @@ p {
   font-weight: 800;
   margin-bottom: 0.5rem;
   text-align: center;
+  white-space: nowrap;
 }
 
 .auth-subtitle {
