@@ -15,22 +15,24 @@ export default function Dashboard() {
   const userName = user?.user_metadata?.full_name || user?.email;
 
   useEffect(() => {
-    const fetchBlocks = async () => {
-      if (!user) return;
+    const checkSessionAndFetchBlocks = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      const res = await fetch('/api/blocks', {
+      
+      if (!session) {
+        // If no session, redirect to the login page
+        router.push('/login');
+      } else {
+        // If session exists, fetch the user's blocks
+        const res = await fetch('/api/blocks', {
           headers: { Authorization: `Bearer ${session.access_token}` },
-      });
-      const data = await res.json();
-      setBlocks(data);
+        });
+        const data = await res.json();
+        setBlocks(data);
+      }
     };
-
-    if (!user) {
-      router.push('/');
-    } else {
-      fetchBlocks();
-    }
-  }, [user, router]);
+    
+    checkSessionAndFetchBlocks();
+  }, [router]);
   
   const handleCreateBlock = async (e) => {
     e.preventDefault();
