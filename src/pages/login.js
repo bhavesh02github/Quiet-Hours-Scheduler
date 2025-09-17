@@ -1,4 +1,4 @@
-// pages/index.js
+// pages/login.js
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
@@ -49,7 +49,7 @@ export default function Home() {
             <input
               id="email"
               type="email"
-              placeholder="Your Valid Email Address"
+              placeholder="Your Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
