@@ -1,4 +1,4 @@
-// pages/login.js
+// pages/index.js
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
@@ -86,7 +86,7 @@ export default function Home() {
         </form>
         
         <p className="text-center mt-4">
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+          {isSignUp ? 'Already have an account?' : "Don&apos;t have an account?"}
           <button className="btn-link" onClick={() => setIsSignUp(!isSignUp)}>
             {isSignUp ? ' Log In' : ' Sign Up'}
           </button>
