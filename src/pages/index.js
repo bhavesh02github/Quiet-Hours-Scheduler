@@ -30,7 +30,7 @@ export default function LandingPage() {
             <section id="info" className="glass-card info-card">
                 <h3 className="text-center" style={{ fontSize: '1.5rem', color: 'var(--text-light)' }}>What is this project?</h3>
                 <p className="text-center" style={{ color: 'var(--text-secondary)' }}>
-                    Quiet Hours Scheduler is a simple web application that helps you stay focused. Authenticated users can create scheduled time blocks for silent study or work. A background function runs automatically to send you an email reminder 10 minutes before each of your sessions begins, so you're always prepared to focus.
+                    Quiet Hours Scheduler is a simple web application that helps you stay focused. Authenticated users can create scheduled time blocks for silent study or work. A background function runs automatically to send you an email reminder 10 minutes before each of your sessions begins, so you are always prepared to focus.
                 </p>
             </section>
 
