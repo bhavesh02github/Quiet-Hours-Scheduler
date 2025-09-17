@@ -86,7 +86,7 @@ export default function Home() {
         </form>
         
         <p className="text-center mt-4">
-          {isSignUp ? 'Already have an account?' : "Don&apos;t have an account?"}
+          {isSignUp ? 'Already have an account?' : "Don&apos;t have an account"}
           <button className="btn-link" onClick={() => setIsSignUp(!isSignUp)}>
             {isSignUp ? ' Log In' : ' Sign Up'}
           </button>
