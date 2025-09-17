@@ -34,11 +34,21 @@ export default async function handler(req, res) {
     for (const block of blocksToSend) {
       try {
         await resend.emails.send({
-          from: 'reminders@bhavesh-scheduler.space',
-          to: block.userEmail,
-          subject: `Reminder: Your Quiet Time starts soon!`,
-          html: `<p>Hi there, just a friendly reminder that your focused session for "<strong>${block.title}</strong>" is starting soon.</p>`,
-        });
+            from: 'Reminder <reminders@bhavesh-scheduler.space>',
+            to: block.userEmail,
+            subject: `⏰ Reminder: Your session for "${block.title}" starts in 10 minutes!`,
+            html: `
+              <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+                <h2 style="color: #333;">Quiet Hours Reminder 🤫</h2>
+                <p>Hi there,</p>
+                <p>This is a friendly reminder that your focused session for "<strong>${block.title}</strong>" is scheduled to begin in about 10 minutes.</p>
+                <p>Time to wrap up, grab a drink, and get ready to focus!</p>
+                <br>
+                <p>Best,</p>
+                <p><strong>The Quiet Hours Scheduler</strong></p>
+              </div>
+            `,
+});
 
         // 7. Update the block to prevent sending more reminders
         await db.collection('timeBlocks').updateOne(
