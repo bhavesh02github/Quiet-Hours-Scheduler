@@ -15,7 +15,6 @@ export default async function handler(req, res) {
         const client = await clientPromise;
         const db = client.db('quiet_hours_db');
 
-        // --- TIMEZONE FIX ---
         const userTimeZone = 'Asia/Kolkata';
         // This correctly converts your input time from IST to UTC
         const utcStartTime = zonedTimeToUtc(startTime, userTimeZone);
