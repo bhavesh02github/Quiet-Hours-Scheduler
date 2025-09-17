@@ -1,4 +1,4 @@
-// pages/index.js (formerly landing.js)
+// pages/index.js
 import Link from 'next/link';
 import Head from 'next/head';
 
@@ -18,11 +18,11 @@ export default function LandingPage() {
                     Your personal tool for creating focused, uninterrupted time blocks. Automate reminders and stay on track with your goals.
                 </p>
                 <div className="landing-button-group">
-                    <Link href="/login" passHref legacyBehavior>
-                        <a className="btn-primary">Get Started</a>
+                    <Link href="/login" className="btn-primary">
+                        Get Started
                     </Link>
-                    <Link href="#info" passHref legacyBehavior>
-                        <a className="btn-secondary">Learn More</a>
+                    <Link href="#info" className="btn-secondary">
+                        Learn More
                     </Link>
                 </div>
             </header>
