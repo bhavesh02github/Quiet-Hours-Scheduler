@@ -44,7 +44,7 @@ export default async function handler(req, res) {
                 <p>This is a friendly reminder that your focused session for "<strong>${block.title}</strong>" is scheduled to begin in about 10 minutes.</p>
                 <p>Time to wrap up, grab a drink, and get ready to focus!</p>
                 <br>
-                <p>Best,</p>
+                <p>Best Regards,</p>
                 <p><strong>The Quiet Hours Scheduler</strong></p>
               </div>
             `,
