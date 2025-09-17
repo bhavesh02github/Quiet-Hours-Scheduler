@@ -39,19 +39,18 @@ export default function Dashboard() {
     }, [user]);
 
     useEffect(() => {
-        // This logic correctly handles loading, authentication, and logout
-        if (user) {
-            fetchBlocks();
-        } else {
-            // A brief delay to ensure the user object is confirmed null after logout
-            const timer = setTimeout(() => {
-                if (!supabase.auth.getSession()) {
-                    router.push('/login');
-                }
-            }, 100);
-            return () => clearTimeout(timer);
-        }
-    }, [user, router, fetchBlocks]);
+    // If the auth state is still loading, do nothing yet.
+    if (isLoading && !user) return;
+
+    // If a user object exists, fetch their blocks.
+    if (user) {
+      fetchBlocks();
+    } else {
+      // If there is no user, it means they are logged out. Redirect them.
+      router.push('/login');
+    }
+  }, [user, router, fetchBlocks, isLoading]);
+
     
     const handleCreateBlock = async (e) => {
         e.preventDefault();
