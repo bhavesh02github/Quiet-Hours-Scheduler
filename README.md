@@ -1,40 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Quiet Hours Scheduler 🤫
 
-## Getting Started
+A full-stack web application designed to help users schedule focused, uninterrupted time blocks for study or work, with automated email reminders sent 10 minutes before each session begins.
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+## ✨ Key Features
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+- **User Authentication**: Secure user sign-up and login handled by Supabase.
+- **Block Creation**: Authenticated users can create, view, and delete their own "Quiet Hour" time blocks.
+- **Automated Email Reminders**: A background CRON job runs every 5 minutes to check for upcoming sessions.
+- **Timely Notifications**: Users receive a professionally styled email reminder exactly 10 minutes before their scheduled block starts.
+- **Modern UI**: A responsive, dark-themed interface with a "glassmorphism" design for a clean and modern user experience.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## ⚙️ Technology Stack
 
-## Learn More
+This project uses a modern, serverless-focused technology stack.
 
-To learn more about Next.js, take a look at the following resources:
+- **Framework**: **Next.js** (React)
+- **Database**: **MongoDB** (with MongoDB Atlas)
+- **Authentication**: **Supabase Auth**
+- **Email Delivery**: **Resend**
+- **Scheduler**: **GitHub Actions** (or any external CRON job provider)
+- **Hosting**: **Netlify**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🚀 Getting Started
 
-## Deploy on Vercel
+### Prerequisites
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Node.js and npm
+- A free [Supabase](https://supabase.com) account
+- A free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cluster
+- A free [Resend](https://resend.com) account with a verified domain
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+### Local Setup
+
+1.  **Clone the repository:**
+    ```bash
+    git clone [https://github.com/bhavesh02github/Quiet-Hours-Scheduler.git](https://github.com/bhavesh02github/Quiet-Hours-Scheduler.git)
+    cd Quiet-Hours-Scheduler
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Set up environment variables:**
+    Create a file named `.env.local` in the root of the project and add the following keys with your own values:
+    ```ini
+    # Supabase
+    NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+
+    # MongoDB
+    MONGODB_URI=YOUR_MONGODB_CONNECTION_STRING
+
+    # Resend
+    RESEND_API_KEY=YOUR_RESEND_API_KEY
+
+    # Cron Job Security
+    CRON_SECRET=GENERATE_A_STRONG_RANDOM_STRING
+    ```
+
+4.  **Run the development server:**
+    ```bash
+    npm run dev
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+---
+
+## 🌐 Deployment
+
+This project is designed to be deployed on a serverless platform like Vercel or Netlify.
+
+1.  **Push your code to a GitHub repository.**
+2.  **Import the repository** into your Vercel or Netlify account.
+3.  **Configure the Environment Variables** in the project settings on your hosting provider, copying the values from your `.env.local` file.
+4.  **Set up the CRON Job**:
+    -   Create a free account on a service like [Cron-Job.org](https://cron-job.org).
+    -   Create a new job that sends a `GET` request to your live API endpoint (`https://<your-site-url>/api/crons/send-reminders`) every 5 minutes.
+    -   Add a custom HTTP header: `Authorization` with the value `Bearer YOUR_CRON_SECRET`.
+
+---
+
+## © License
+
+This project is created by Bhavesh. All Rights Reserved.
