@@ -9,45 +9,41 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const handleAuthChange = async (event, session) => {
-      if (session) {
-        // Fetch the user data again to get the latest metadata
-        const { data: { user: updatedUser } } = await supabase.auth.getUser();
-        setUser(updatedUser || null);
-      } else {
-        setUser(null);
-      }
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      // FIX: Check if session exists before trying to access its user property
+      setUser(session?.user ?? null); 
       setLoading(false);
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(handleAuthChange);
+    checkUser();
 
-    // Initial check for a session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      handleAuthChange(null, session);
-    });
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        // FIX: Check if session exists here as well
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
 
     return () => {
-      authListener.subscription.unsubscribe();
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, []);
 
   const value = {
-    signUp: async ({ email, password, name }) => {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (!error && data?.user) {
-        await supabase.auth.updateUser({ data: { full_name: name } });
-      }
-      return { data, error };
-    },
+    signUp: (data) => supabase.auth.signUp(data),
     signIn: (data) => supabase.auth.signInWithPassword(data),
     signOut: () => supabase.auth.signOut(),
     user,
+    loading, // Expose loading state
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };
