@@ -1,52 +1,68 @@
-// pages/index.js
-import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/router';
-import toast from 'react-hot-toast';
+// pages/index.js (formerly landing.js)
+import Link from 'next/link';
+import Head from 'next/head';
 
-export default function Home() {
-  const { user, signIn } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const router = useRouter();
+export default function LandingPage() {
+    return (
+        <div className="main-container">
+            <Head>
+                <title>Quiet Hours Scheduler</title>
+                <meta name="description" content="Your personal tool for focused, uninterrupted time." />
+            </Head>
 
-  if (user) {
-    router.push('/dashboard');
-    return null;
-  }
+            <header className="landing-hero">
+                <h1 className="landing-title">
+                    <span className="text-gradient">Quiet Hours</span> Scheduler
+                </h1>
+                <p className="landing-subtitle">
+                    Your personal tool for creating focused, uninterrupted time blocks. Automate reminders and stay on track with your goals.
+                </p>
+                <div className="landing-button-group">
+                    <Link href="/login" passHref legacyBehavior>
+                        <a className="btn-primary">Get Started</a>
+                    </Link>
+                    <Link href="#info" passHref legacyBehavior>
+                        <a className="btn-secondary">Learn More</a>
+                    </Link>
+                </div>
+            </header>
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { error } = await signIn({ email, password });
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success('Logged in successfully!');
-      router.push('/dashboard');
-    }
-  };
+            <section id="info" className="glass-card info-card">
+                <h3 className="text-center" style={{ fontSize: '1.5rem', color: 'var(--text-light)' }}>What is this project?</h3>
+                <p className="text-center" style={{ color: 'var(--text-secondary)' }}>
+                    Quiet Hours Scheduler is a simple web application that helps you stay focused. Authenticated users can create scheduled time blocks for silent study or work. A background function runs automatically to send you an email reminder 10 minutes before each of your sessions begins, so you're always prepared to focus.
+                </p>
+            </section>
 
-  return (
-    <div className="container">
-      <h1>Quiet Hours Scheduler</h1>
-      <form onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit">Login</button>
-      </form>
-      {/* Add a signup form or link as needed */}
-    </div>
-  );
+            <section className="glass-card tech-stack">
+                <h3 className="text-center" style={{ fontSize: '1.5rem', color: 'var(--text-light)' }}>Built with a powerful stack</h3>
+                <ul style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '2rem', listStyle: 'none', padding: '0', margin: '0' }}>
+                    <li className="text-center">
+                        <span style={{ fontSize: '2.5rem' }}>⚛️</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>React</p>
+                    </li>
+                    <li className="text-center">
+                        <span style={{ fontSize: '2.5rem' }}>⚡️</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Next.js</p>
+                    </li>
+                    <li className="text-center">
+                        <span style={{ fontSize: '2.5rem' }}>🚀</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Supabase</p>
+                    </li>
+                    <li className="text-center">
+                        <span style={{ fontSize: '2.5rem' }}>🍃</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>MongoDB</p>
+                    </li>
+                    <li className="text-center">
+                        <span style={{ fontSize: '2.5rem' }}>📧</span>
+                        <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Resend</p>
+                    </li>
+                </ul>
+            </section>
+            
+            <footer className="footer">
+                <p style={{ margin: 0 }}>© {new Date().getFullYear()} Bhavesh. All Rights Reserved.</p>
+            </footer>
+        </div>
+    );
 }

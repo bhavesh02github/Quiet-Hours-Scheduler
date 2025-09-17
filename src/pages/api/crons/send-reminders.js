@@ -45,8 +45,14 @@ export default async function handler(req, res) {
         await resend.emails.send({
           from: 'reminders@bhavesh-scheduler.space',
           to: block.userEmail,
-          subject: `Reminder: Your Quiet Time starts soon!`,
-          html: `<p>Hi there, just a friendly reminder that your focused session for "<strong>${block.title}</strong>" is starting soon.</p>`,
+          subject: `⏰ Reminder: Your Quiet Time Starts in 10 Minutes!`,
+          html: `
+          <p>Hi ${userName},</p>
+          <p>Just a quick reminder that your quiet session for <strong>"${block.title}"</strong> is starting at ${formattedStartTime}.</p>
+          <p>Now is the perfect time to get ready to focus!</p>
+          <p>Best of luck with your work.</p>
+          <p>The Quiet Hours Scheduler Team</p>
+          `,
         });
         console.log(`Email sent successfully to ${block.userEmail}.`);
 

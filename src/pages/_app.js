@@ -1,7 +1,7 @@
 // pages/_app.js
 import { AuthProvider } from '../context/AuthContext';
 import { Toaster } from 'react-hot-toast';
-import '../styles/globals.css'; // Make sure to create this file for basic styling
+import '../styles/globals.css'; // This is the only place it should be imported
 
 function MyApp({ Component, pageProps }) {
   return (
