@@ -3,7 +3,7 @@ import clientPromise from '../../../lib/mongodb';
 import { Resend } from 'resend';
 
 export default async function handler(req, res) {
-  console.log("CRON job started..."); // Log start
+  console.log("CRON job started...");
 
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     console.error("Unauthorized attempt.");
@@ -21,14 +21,13 @@ export default async function handler(req, res) {
       return res.status(400).json({ message: 'Time window not provided.' });
     }
 
-    const now = new Date(startTime);
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000);
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60 * 1000);
+    const start = new Date(startTime);
+    const end = new Date(endTime);
 
-    console.log(`Searching for blocks between ${fiveMinutesAgo.toISOString()} and ${tenMinutesFromNow.toISOString()}`);
+    console.log(`Searching for blocks between ${start.toISOString()} and ${end.toISOString()}`);
 
     const blocksToSend = await db.collection('timeBlocks').find({
-      startTime: { $gte: fiveMinutesAgo, $lte: tenMinutesFromNow },
+      startTime: { $gte: start, $lte: end },
       reminderSent: false,
     }).toArray();
 
@@ -39,20 +38,14 @@ export default async function handler(req, res) {
 
     console.log(`Found ${blocksToSend.length} blocks to send reminders for.`);
 
-    const reminderPromises = blocksToSend.map(async (block) => {
+    for (const block of blocksToSend) {
       try {
         console.log(`Attempting to send email to ${block.userEmail} for block: ${block.title}`);
         await resend.emails.send({
           from: 'reminders@bhavesh-scheduler.space',
           to: block.userEmail,
-          subject: `⏰ Reminder: Your Quiet Time Starts in 10 Minutes!`,
-          html: `
-          <p>Hi ${userName},</p>
-          <p>Just a quick reminder that your quiet session for <strong>"${block.title}"</strong> is starting at ${formattedStartTime}.</p>
-          <p>Now is the perfect time to get ready to focus!</p>
-          <p>Best of luck with your work.</p>
-          <p>The Quiet Hours Scheduler Team</p>
-          `,
+          subject: `Reminder: Your Quiet Time starts soon!`,
+          html: `<p>Hi there, just a friendly reminder that your focused session for "<strong>${block.title}</strong>" is starting soon.</p>`,
         });
         console.log(`Email sent successfully to ${block.userEmail}.`);
 
@@ -65,9 +58,7 @@ export default async function handler(req, res) {
       } catch (emailError) {
         console.error(`Failed to process block ID: ${block._id}`, emailError);
       }
-    });
-
-    await Promise.all(reminderPromises);
+    }
 
     res.status(200).json({ message: `Successfully processed reminders.` });
   } catch (error) {
