@@ -1,33 +1,23 @@
-// pages/api/crons/send-reminders.js
 import clientPromise from '../../../lib/mongodb';
 import { Resend } from 'resend';
+import { zonedTimeToUtc, toDate } from 'date-fns-tz';
 
 export default async function handler(req, res) {
-  // 1. Authorize the request
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ message: 'Unauthorized' });
   }
 
-  // 2. Initialize database and email clients
   const resend = new Resend(process.env.RESEND_API_KEY);
   const client = await clientPromise;
   const db = client.db('quiet_hours_db');
 
   try {
-    // 3. Get the accurate time window from the GitHub Action URL
-    const { startTime } = req.query;
-    if (!startTime) {
-      return res.status(400).json({ message: 'Start time not provided.' });
-    }
+    const userTimeZone = 'Asia/Kolkata';
+    const nowInIST = toDate(new Date(), { timeZone: userTimeZone });
     
-    // 4. Create a flexible query to handle delays
-    const now = new Date(startTime);
-    // Look 5 mins into the past to catch blocks missed due to scheduler delay
-    const fiveMinutesAgo = new Date(now.getTime() - 5 * 60 * 1000); 
-    // Look 10 mins into the future for the standard reminder window
-    const tenMinutesFromNow = new Date(now.getTime() + 10 * 60 * 1000); 
+    const fiveMinutesAgo = new Date(nowInIST.getTime() - 5 * 60 * 1000);
+    const tenMinutesFromNow = new Date(nowInIST.getTime() + 10 * 60 * 1000);
 
-    // 5. Find all blocks that need a reminder within the flexible window
     const blocksToSend = await db.collection('timeBlocks').find({
       startTime: {
         $gte: fiveMinutesAgo,
