@@ -24,7 +24,7 @@ This project uses a modern, serverless-focused technology stack.
 - **Database**: **MongoDB** (with MongoDB Atlas)
 - **Authentication**: **Supabase Auth**
 - **Email Delivery**: **Resend**
-- **Scheduler**: **GitHub Actions** (or any external CRON job provider)
+- **Scheduler**: **[Cron-Job.org](https://cron-job.org)** 
 - **Hosting**: **Netlify**
 
 ---
